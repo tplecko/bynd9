@@ -1,0 +1,11 @@
+﻿{
+  "Port": 23432,
+  "Path": "/updater/post",
+  "KeyFieldName": "API-key",
+  "ZoneFilePath": "C:\\temp\\test.zone",
+  "ActiveString": "(running)",
+  "InactiveString": "(dead)",
+  "FieldIndex": 2,
+  "Bind9ServiceName": "bind9"
+}
+
