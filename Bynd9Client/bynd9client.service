@@ -1,0 +1,17 @@
+﻿[Unit]
+Description=Bynd9Client service
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=notify
+ExecStart=/bynd9/net7/dotnet Bynd9Client.dll
+WorkingDirectory=/bynd9/Bynd9Client/
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
