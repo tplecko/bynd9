@@ -42,6 +42,8 @@ namespace Bynd9
             public string InactiveString { get; set; } = "(dead)";
             public int FieldIndex { get; set; } = 2;
             public string Bind9ServiceName { get; set; } = "bind9";
+            public string certificateFilePath { get; set; } = "server.crt";
+            public string certificatePassword { get; set; } = "password";
 
         }
     }
