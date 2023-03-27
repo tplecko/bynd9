@@ -7,14 +7,17 @@ Configuration is located in several .json files:
 - config.json - Holds the service configuration
 ``` json
 {
-  "Port": 23432,
-  "Path": "/updater/post",
+  "HttpPort": 23432,
+  "certificateFilePath": "server.crt",
+  "certificatePassword": "password",
+  "HttpsPort": 23433,
   "KeyFieldName": "API-key",
+  "Path": "/updater/post",
   "ZoneFilePath": "/etc/bind/test.zone",
-  "ActiveString": "(running)",
-  "InactiveString": "(dead)",
+  "Bind9ServiceName": "bind9",
   "FieldIndex": 2,
-  "Bind9ServiceName": "bind9"
+  "ActiveString": "(running)",
+  "InactiveString": "(dead)"
 }
 ```
 
@@ -37,10 +40,10 @@ No limit on device name length.
 No limit on key length
 
 # To-do
-1. https
-2. logging
-3. debug mode
-4. More error codes in response
+- https (started)
+- debug mode (more logging)
+- notifications (telegram, discord, zulip and such)
+- more clients (python and such)
 
 Example request:
 C#
