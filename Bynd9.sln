@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bynd9", "Bynd9\Bynd9.csproj", "{76CE3DA9-BADE-41CC-8B71-D1763D8431B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bynd9", "Bynd9\Bynd9.csproj", "{76CE3DA9-BADE-41CC-8B71-D1763D8431B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bynd9Client", "Bynd9Client\Bynd9Client.csproj", "{C925F418-ED46-42C6-8196-458412A96458}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{76CE3DA9-BADE-41CC-8B71-D1763D8431B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76CE3DA9-BADE-41CC-8B71-D1763D8431B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76CE3DA9-BADE-41CC-8B71-D1763D8431B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C925F418-ED46-42C6-8196-458412A96458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C925F418-ED46-42C6-8196-458412A96458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C925F418-ED46-42C6-8196-458412A96458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C925F418-ED46-42C6-8196-458412A96458}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

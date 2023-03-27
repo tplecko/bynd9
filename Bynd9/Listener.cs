@@ -59,6 +59,19 @@ namespace Bynd9
             while (true)
             {
                 HttpListenerContext context = httpListener.GetContext();
+                if (context.Request.Url!.AbsolutePath == "/ip")
+                {
+                    context.Response.KeepAlive = true;
+                    context.Response.StatusCode = 200;
+                    context.Response.StatusDescription = "OK";
+                    context.Response.Headers.Add("Content-Type", "text/html");
+                    using StreamWriter writer = new(context.Response.OutputStream);
+                    writer.Write(context.Request.RemoteEndPoint.Address.ToString());
+                }
+                else
+                {
+
+                }
                 ThreadPool.QueueUserWorkItem(ProcessRequest, context);
             }
         }
@@ -118,7 +131,6 @@ namespace Bynd9
                                     {
                                         R.Status = -1; // Update failed
                                     }
-                                    context.Response.Headers.Add("Content-Type", "application/json");
                                 }
                                 else
                                 {
@@ -127,9 +139,9 @@ namespace Bynd9
                                 context.Response.KeepAlive = true;
                                 context.Response.StatusCode = 200;
                                 context.Response.StatusDescription = "OK";
-                                context.Response.Headers.Add("Content-Type", "application/json");
+                                context.Response.Headers.Add("Content-Type", "text/html");
                                 using StreamWriter writer = new(context.Response.OutputStream);
-                                writer.Write(JsonSerializer.Serialize(R));
+                                writer.Write(R.ToString());
                             }
                         }
                     }
