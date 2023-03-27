@@ -173,3 +173,18 @@ Service responds with JSON encoded data:
 - 1 = Success
 - 0 = No update needed
 - -1 = Error updating zone file
+
+# How-to
+Run this command first
+```
+export PATH=$PATH:/MasterServer
+```
+Edit the config.json file to your liking
+
+Place the .service file in /etc/systemd/system/
+After you have copied the .sergice file, execute 
+```
+systemctl daemon-reload
+```
+
+Client is not needed on the server machine
