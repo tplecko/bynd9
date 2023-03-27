@@ -84,8 +84,8 @@ namespace Bynd9
             while (true)
             { // Untested -------------------
                 HttpListenerContext context = httpListener.GetContext();
-                SslStream sslStream = new SslStream(context.Request.InputStream, false);
-                sslStream.AuthenticateAsServer(certificate, false, SslProtocols.Tls, true);
+                SslStream sslStream = new(context.Request.InputStream, false);
+                sslStream.AuthenticateAsServer(certificate, false, SslProtocols.Tls13, true);
                 ThreadPool.QueueUserWorkItem(ProcessRequest, context);
             }
         }
@@ -141,7 +141,7 @@ namespace Bynd9
                                 context.Response.StatusDescription = "OK";
                                 context.Response.Headers.Add("Content-Type", "text/html");
                                 using StreamWriter writer = new(context.Response.OutputStream);
-                                writer.Write(R.ToString());
+                                writer.Write(R.Status.ToString());
                             }
                         }
                     }

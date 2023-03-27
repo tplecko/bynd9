@@ -1,0 +1,9 @@
+﻿{
+  "Server": "127.0.0.1",
+  "Port": 23432,
+  "Path": "/updater/post",
+  "KeyFieldName": "API-key",
+  "KeyFieldValue": "asdfasdfASDFASDF",
+  "DeviceID": "Gateway"
+}
+
