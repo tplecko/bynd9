@@ -1,5 +1,6 @@
 ﻿{
-  "Port": 23432,
+  "HttpPort": 23432,
+  "HttpsPort": 23433,
   "Path": "/updater/post",
   "KeyFieldName": "API-key",
   "ZoneFilePath": "C:\\temp\\test.zone",

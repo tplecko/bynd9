@@ -33,7 +33,8 @@ namespace Bynd9
 
         public class Configuration
         {
-            public int Port { get; set; } = 23432;
+            public int HttpPort { get; set; } = 23432;
+            public int HttpsPort { get; set; } = 23433;
             public string Path { get; set; } = "/updater/post";
             public string KeyFieldName { get; set; } = "API-key";
             public string ZoneFilePath { get; set; } = "/etc/bind/example.com.zone";

@@ -16,7 +16,8 @@ namespace Bynd9
 
             HttpListener httpListener;
             httpListener = new() { AuthenticationSchemes = AuthenticationSchemes.Anonymous };
-            httpListener.Prefixes.Add($"http://*:{C.conf.Port}/");
+            httpListener.Prefixes.Add($"http://*:{C.conf.HttpPort}/");
+            httpListener.Prefixes.Add($"https://*:{C.conf.HttpsPort}/");
             HttpListenerTimeoutManager timeoutManager = httpListener.TimeoutManager;
             timeoutManager.IdleConnection = new TimeSpan(0, 0, 5);
             try
@@ -30,7 +31,7 @@ namespace Bynd9
             }
         }
 
-        static void WaitForIncomingConnection(Object? obj)
+        static void WaitForIncomingConnection(object? obj)
         {
             HttpListener httpListener = (HttpListener)obj!;
 
@@ -61,7 +62,7 @@ namespace Bynd9
                                     {
                                         // --- This is currently not thread safe ---
 
-                                        bool returnValue = Bind.UpdateARecord(C.conf.ZoneFilePath, hostName, postData.IP);
+                                        bool returnValue = Bind.UpdateARecord(C.conf.ZoneFilePath, hostName, postData.IP) && Bind.IncreaseSerial(C.conf.ZoneFilePath);
 
                                         if (returnValue)
                                         {
@@ -69,6 +70,7 @@ namespace Bynd9
 
                                             C.RestartBIND9 = true;
                                             R.Status = 1; // Update succeeded
+                                            File.WriteAllText($"{hostName}.history",$"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {postData.IP}\n");
                                         }
                                         else
                                         {

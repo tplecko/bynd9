@@ -28,6 +28,29 @@ namespace Bynd9
             return returnValue;
         }
 
+        internal static bool IncreaseSerial(string filePath)
+        {
+            bool returnValue = false;
+
+            string zoneFileContents = File.ReadAllText(filePath);
+
+            string serialNumberPattern = @"\d{10}"; // Assumes a serial number in YYYYMMDDnn format
+            Match match = Regex.Match(zoneFileContents, serialNumberPattern);
+
+            if (match.Success)
+            {
+                int currentSerialNumber = int.Parse(match.Value);
+
+                int newSerialNumber = currentSerialNumber + 1;
+                string newZoneFileContents = Regex.Replace(zoneFileContents, serialNumberPattern, newSerialNumber.ToString().PadLeft(10, '0'));
+
+                File.WriteAllText(filePath, newZoneFileContents);
+
+                returnValue = true;
+            }
+            return returnValue;
+        }
+
         internal static void Restart()
         {
             SystemdService service = new(C.conf.Bind9ServiceName);
