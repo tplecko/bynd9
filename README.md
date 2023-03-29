@@ -190,3 +190,7 @@ Zone must be in format:
 `host          IN    A    1.2.3.4`
 or 
 `host    30    IN    A    1.2.3.4`
+
+# Notifications
+Discord - Webhook
+Telegram - CallMeBot direct message
