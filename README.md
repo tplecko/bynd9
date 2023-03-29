@@ -181,6 +181,7 @@ Place the .service file in /etc/systemd/system/
 After you have copied the .sergice file, execute 
 ```
 systemctl daemon-reload
+systemctl enable bynd9
 ```
 
 Client is not needed on the server machine
@@ -192,5 +193,5 @@ or
 `host    30    IN    A    1.2.3.4`
 
 # Notifications
-Discord - Webhook
-Telegram - CallMeBot direct message
+- Discord - Webhook 
+- Telegram - CallMeBot direct message
