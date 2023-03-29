@@ -4,6 +4,6 @@
   "Path": "/updater/post",
   "KeyFieldName": "API-key",
   "KeyFieldValue": "asdfasdfASDFASDF",
-  "DeviceID": "Gateway"
+  "DeviceID": "Gateway",
+  "Discord": ""
 }
-

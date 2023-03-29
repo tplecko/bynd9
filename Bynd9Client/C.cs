@@ -14,12 +14,13 @@ namespace Bynd9Client
 
         public class Configuration
         {
-            public int Port { get; set; } = 23432;
             public string Server { get; set; } = "127.0.0.1";
+            public int Port { get; set; } = 23432;
+            public string Path { get; set; } = "/updater/post";
             public string KeyFieldName { get; set; } = "API-key";
             public string KeyFieldValue { get; set; } = "asdfasdfASDFASDF";
-            public string DeviceId { get; set; } = "Gateway";
-            public string Path { get; set; } = "/updater/post";
+            public string DeviceID { get; set; } = "Gateway";
+            public string Discord { get; set; } = string.Empty;
         }
     }
 }

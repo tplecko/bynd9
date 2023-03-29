@@ -42,9 +42,10 @@ namespace Bynd9
             public string InactiveString { get; set; } = "(dead)";
             public int FieldIndex { get; set; } = 2;
             public string Bind9ServiceName { get; set; } = "bind9";
-            public string certificateFilePath { get; set; } = "server.crt";
-            public string certificatePassword { get; set; } = "password";
-
+            public string CertificateFilePath { get; set; } = "server.crt";
+            public string CertificatePassword { get; set; } = "password";
+            public string Discord { get; set; } = string.Empty;
+            public string FQDNSuffix { get; set; } = "example.com";
         }
     }
 }

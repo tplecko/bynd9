@@ -33,7 +33,7 @@ namespace Bynd9
             }
 
             //HTTPS
-            if (File.Exists(C.conf.certificateFilePath))
+            if (File.Exists(C.conf.CertificateFilePath))
             {
                 HttpListener httpsListener;
                 httpsListener = new() { AuthenticationSchemes = AuthenticationSchemes.Anonymous };
@@ -79,7 +79,7 @@ namespace Bynd9
         static void HttpsResponse(object? obj)
         {
             HttpListener httpListener = (HttpListener)obj!;
-            X509Certificate2 certificate = new(C.conf.certificateFilePath, C.conf.certificatePassword);
+            X509Certificate2 certificate = new(C.conf.CertificateFilePath, C.conf.CertificatePassword);
 
             while (true)
             { // Untested -------------------
@@ -117,6 +117,7 @@ namespace Bynd9
                                 {
                                     // --- This is currently not thread safe ---
 
+                                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Updating zone file: {C.conf.ZoneFilePath}\n");
                                     bool returnValue = Bind.UpdateARecord(C.conf.ZoneFilePath, hostName, postData.IP) && Bind.IncreaseSerial(C.conf.ZoneFilePath);
 
                                     if (returnValue)
@@ -125,16 +126,19 @@ namespace Bynd9
 
                                         C.RestartBIND9 = true;
                                         R.Status = 1; // Update succeeded
-                                        File.WriteAllText($"{hostName}.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {postData.IP}\n");
+                                        File.AppendAllText($"{hostName}.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {postData.IP}\n");
+                                        Bynd9Notifier.Discord.Server.Send(C.conf.Discord, $"{hostName}.{C.conf.FQDNSuffix}", CurrentValue, postData.IP);
                                     }
                                     else
                                     {
                                         R.Status = -1; // Update failed
+                                        File.AppendAllText($"{hostName}.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Update failed\n");
                                     }
                                 }
                                 else
                                 {
                                     R.Status = 0; // Update not needed
+                                    File.AppendAllText($"{hostName}.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Update not needed\n");
                                 }
                                 context.Response.KeepAlive = true;
                                 context.Response.StatusCode = 200;
@@ -144,10 +148,19 @@ namespace Bynd9
                                 writer.Write(R.Status.ToString());
                             }
                         }
+                        else
+                        {
+                            File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Invalid DeviceID\n");
+                        }
+                    }
+                    else
+                    {
+                        File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Invalid API key\n");
                     }
                 }
-                catch
+                catch ( Exception ex ) 
                 {
+                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {ex.Message}\n");
                     context.Response.Close();
                 }
             }

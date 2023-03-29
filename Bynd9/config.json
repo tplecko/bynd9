@@ -9,6 +9,8 @@
   "Bind9ServiceName": "bind9",
   "FieldIndex": 2,
   "ActiveString": "(running)",
-  "InactiveString": "(dead)"
+  "InactiveString": "(dead)",
+  "FQDNSuffix": "example.com",
+  "Discord": ""
 }
 

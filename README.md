@@ -184,3 +184,9 @@ systemctl daemon-reload
 ```
 
 Client is not needed on the server machine
+
+# Zone file format
+Zone must be in format:
+`host          IN    A    1.2.3.4`
+or 
+`host    30    IN    A    1.2.3.4`

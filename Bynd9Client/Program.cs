@@ -19,6 +19,8 @@ static bool GetNewIP(out string NewIP)
         if (currentIP != lastIP)
         {
             NewIP = currentIP;
+            Bynd9Notifier.Discord.Client.Send(C.conf.Discord, C.conf.DeviceID, lastIP, NewIP, C.conf.Server);
+            NewIP = currentIP;
             return true;
         }
     }
@@ -37,21 +39,20 @@ static string y(int x) => x switch
     _ => "Unknown code"
 };
 
-
 new System.Timers.Timer { AutoReset = true, Enabled = true, Interval = 3000 }.Elapsed += (sender, args) => {
 
 
     if (GetNewIP(out string NewIP))
     {
         File.WriteAllText("ip.last",NewIP);
-        File.WriteAllText($"ip.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {NewIP}\n");
+        File.AppendAllText($"ip.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {NewIP}\n");
 
         var url = $"http://{C.conf.Server}:{C.conf.Port}{C.conf.Path}";
 
         using HttpClient client = new();
         client.DefaultRequestHeaders.Add(C.conf.KeyFieldName, C.conf.KeyFieldValue);
 
-        string requestBody = $"{{\"DeviceID\": \"{C.conf.DeviceId}\", \"IP\": \"{NewIP}\"}}";
+        string requestBody = $"{{\"DeviceID\": \"{C.conf.DeviceID}\", \"IP\": \"{NewIP}\"}}";
 
 
         using var httpContent = new StringContent(requestBody, System.Text.Encoding.UTF8, "application/json");
@@ -62,12 +63,12 @@ new System.Timers.Timer { AutoReset = true, Enabled = true, Interval = 3000 }.El
             string responseBody = response.Content.ReadAsStringAsync().Result;
             if (int.TryParse(responseBody, out int x))
             {
-                File.WriteAllText("httpclient.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {y(x)}");
+                File.AppendAllText("client.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {y(x)}\n");
             }
         }
         else
         {
-            File.WriteAllText("httpclient.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {response.StatusCode}");
+            File.AppendAllText("client.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {response.StatusCode}\n");
         }
     }
 };
