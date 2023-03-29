@@ -32,6 +32,7 @@ systemctl enable bynd9
 Record must be in the following format:
 - `host          IN    A    1.2.3.4`
 - `host    30    IN    A    1.2.3.4`
+
 If the record is in any other format (has additional fields), regex matching must be modified
 
 # Supported notifications
