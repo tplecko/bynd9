@@ -10,7 +10,7 @@ ThreadPool.SetMinThreads(workerThreadsMax, completionPortThreadsMax);
 
 new Listener();
 
-new System.Timers.Timer { AutoReset = true, Enabled = true, Interval = 15000 }.Elapsed += (sender, args) => {
+new System.Timers.Timer { AutoReset = true, Enabled = true, Interval = C.conf.Interval * 1000 }.Elapsed += (sender, args) => {
     if (C.RestartBIND9)
     {
         C.RestartBIND9 = false;

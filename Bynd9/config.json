@@ -1,4 +1,5 @@
 ﻿{
+  "Interval": 60,
   "HttpPort": 23432,
   "certificateFilePath": "server.crt",
   "certificatePassword": "password",

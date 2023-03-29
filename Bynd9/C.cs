@@ -33,6 +33,7 @@ namespace Bynd9
 
         public class Configuration
         {
+            public int Interval { get; set; } = 60;
             public int HttpPort { get; set; } = 23432;
             public int HttpsPort { get; set; } = 23433;
             public string Path { get; set; } = "/updater/post";
