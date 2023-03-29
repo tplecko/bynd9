@@ -1,4 +1,6 @@
-﻿namespace Bynd9Notifier
+﻿using System.Text;
+
+namespace Bynd9Notifier
 {
     public class Discord
     {
@@ -22,18 +24,18 @@
                             $"{{\"footer\": {{\"text\": \"Using server {server}\"}}}}" +
                         $"]}}";
 
-                    using var httpContent = new StringContent(requestBody, System.Text.Encoding.UTF8, "application/json");
+                    using var httpContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
                     using HttpResponseMessage response = client.PostAsync(url, httpContent).Result;
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseBody = response.Content.ReadAsStringAsync().Result;
-                        Console.WriteLine(responseBody);
-                    }
-                    else
-                    {
-                        //Console.WriteLine("err");
-                    }
+                    //if (response.IsSuccessStatusCode)
+                    //{
+                    //    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    //    Console.WriteLine(responseBody);
+                    //}
+                    //else
+                    //{
+                    //    //Console.WriteLine("err");
+                    //}
                 }
             }
         }
@@ -57,18 +59,18 @@
                             $"]}}" +
                         $"]}}";
 
-                    using var httpContent = new StringContent(requestBody, System.Text.Encoding.UTF8, "application/json");
+                    using var httpContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
                     using HttpResponseMessage response = client.PostAsync(url, httpContent).Result;
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseBody = response.Content.ReadAsStringAsync().Result;
-                        Console.WriteLine(responseBody);
-                    }
-                    else
-                    {
-                        //Console.WriteLine("err");
-                    }
+                    //if (response.IsSuccessStatusCode)
+                    //{
+                    //    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    //    Console.WriteLine(responseBody);
+                    //}
+                    //else
+                    //{
+                    //    //Console.WriteLine("err");
+                    //}
                 }
             }
         }

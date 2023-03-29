@@ -128,6 +128,7 @@ namespace Bynd9
                                         R.Status = 1; // Update succeeded
                                         File.AppendAllText($"{hostName}.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {postData.IP}\n");
                                         Bynd9Notifier.Discord.Server.Send(C.conf.Discord, $"{hostName}.{C.conf.FQDNSuffix}", CurrentValue, postData.IP);
+                                        Bynd9Notifier.Telegram.Server.Send(C.conf.TelegramUser, $"{hostName}.{C.conf.FQDNSuffix}", CurrentValue, postData.IP);
                                     }
                                     else
                                     {

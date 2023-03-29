@@ -45,6 +45,7 @@ namespace Bynd9
             public string CertificateFilePath { get; set; } = "server.crt";
             public string CertificatePassword { get; set; } = "password";
             public string Discord { get; set; } = string.Empty;
+            public string TelegramUser { get; set; } = string.Empty;
             public string FQDNSuffix { get; set; } = "example.com";
         }
     }

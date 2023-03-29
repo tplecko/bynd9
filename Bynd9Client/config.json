@@ -5,5 +5,6 @@
   "KeyFieldName": "API-key",
   "KeyFieldValue": "asdfasdfASDFASDF",
   "DeviceID": "Gateway",
-  "Discord": ""
+  "Discord": "",
+  "TelegramUser": ""
 }

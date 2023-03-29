@@ -11,6 +11,7 @@
   "ActiveString": "(running)",
   "InactiveString": "(dead)",
   "FQDNSuffix": "example.com",
-  "Discord": ""
+  "Discord": "",
+  "TelegramUser": ""
 }
 

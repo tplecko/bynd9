@@ -21,6 +21,7 @@ namespace Bynd9Client
             public string KeyFieldValue { get; set; } = "asdfasdfASDFASDF";
             public string DeviceID { get; set; } = "Gateway";
             public string Discord { get; set; } = string.Empty;
+            public string TelegramUser { get; set; } = string.Empty;
         }
     }
 }
