@@ -32,7 +32,7 @@ static bool GetNewIP(out string NewIP)
     return false;
 }
 
-static string y(int x) => x switch
+static string CodeToText(int Code) => Code switch
 {
     0 => "Update not needed",
     1 => "Update OK",
@@ -40,38 +40,32 @@ static string y(int x) => x switch
     _ => "Unknown code"
 };
 
-new System.Timers.Timer { AutoReset = true, Enabled = true, Interval = 3000 }.Elapsed += (sender, args) => {
+new System.Timers.Timer { AutoReset = true, Enabled = true, Interval = C.conf.Interval * 1000 }.Elapsed += (sender, args) => {
+    if (!GetNewIP(out string NewIP))
+        return;
+    //if (GetNewIP(out string NewIP))
+    //{
+    File.WriteAllText("ip.last",NewIP);
+    File.AppendAllText($"ip.history", $"{C.TS} => {NewIP}\n");
 
+    var url = $"http://{C.conf.Server}:{C.conf.Port}{C.conf.Path}";
 
-    if (GetNewIP(out string NewIP))
+    using HttpClient client = new();
+    client.DefaultRequestHeaders.Add(C.conf.KeyFieldName, C.conf.KeyFieldValue);
+
+    string requestBody = $"{{\"DeviceID\": \"{C.conf.DeviceID}\", \"IP\": \"{NewIP}\"}}";
+
+    using var httpContent = new StringContent(requestBody, System.Text.Encoding.UTF8, "application/json");
+    using HttpResponseMessage response = client.PostAsync(url, httpContent).Result;
+
+    File.AppendAllText("client.log", $"{C.TS} => {response.StatusCode}\n");
+    if (response.IsSuccessStatusCode)
     {
-        File.WriteAllText("ip.last",NewIP);
-        File.AppendAllText($"ip.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {NewIP}\n");
-
-        var url = $"http://{C.conf.Server}:{C.conf.Port}{C.conf.Path}";
-
-        using HttpClient client = new();
-        client.DefaultRequestHeaders.Add(C.conf.KeyFieldName, C.conf.KeyFieldValue);
-
-        string requestBody = $"{{\"DeviceID\": \"{C.conf.DeviceID}\", \"IP\": \"{NewIP}\"}}";
-
-
-        using var httpContent = new StringContent(requestBody, System.Text.Encoding.UTF8, "application/json");
-        using HttpResponseMessage response = client.PostAsync(url, httpContent).Result;
-
-        if (response.IsSuccessStatusCode)
-        {
-            string responseBody = response.Content.ReadAsStringAsync().Result;
-            if (int.TryParse(responseBody, out int x))
-            {
-                File.AppendAllText("client.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {y(x)}\n");
-            }
-        }
-        else
-        {
-            File.AppendAllText("client.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {response.StatusCode}\n");
-        }
+        string responseBody = response.Content.ReadAsStringAsync().Result;
+        if (int.TryParse(responseBody, out int x))
+            File.AppendAllText("client.log", $"{C.TS} => {CodeToText(x)}\n");
     }
+    //}
 };
 
 

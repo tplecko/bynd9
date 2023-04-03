@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace Bynd9Client
 {
@@ -11,6 +6,8 @@ namespace Bynd9Client
     {
         // Configuration
         internal readonly static Configuration conf = JsonSerializer.Deserialize<Configuration>(File.ReadAllText($@"config.json"))!;
+
+        internal static string TS { get { return $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}"; } }
 
         public class Configuration
         {
@@ -22,6 +19,7 @@ namespace Bynd9Client
             public string DeviceID { get; set; } = "Gateway";
             public string Discord { get; set; } = string.Empty;
             public string TelegramUser { get; set; } = string.Empty;
+            public int Interval { get; set; } = 30;
         }
     }
 }

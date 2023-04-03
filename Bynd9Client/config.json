@@ -6,5 +6,6 @@
   "KeyFieldValue": "asdfasdfASDFASDF",
   "DeviceID": "Gateway",
   "Discord": "",
-  "TelegramUser": ""
+  "TelegramUser": "",
+  "Interval": 30
 }

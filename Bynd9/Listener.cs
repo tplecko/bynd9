@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Bynd9
 {
@@ -26,6 +21,7 @@ namespace Bynd9
             {
                 httpListener.Start();
                 ThreadPool.QueueUserWorkItem(HttpResponse, httpListener);
+                File.AppendAllText($"server.log", $"{C.TS} => HTTP started\n");
             }
             catch
             {
@@ -44,6 +40,7 @@ namespace Bynd9
                 {
                     httpsListener.Start();
                     ThreadPool.QueueUserWorkItem(HttpsResponse, httpsListener);
+                    File.AppendAllText($"server.log", $"{C.TS} => HTTPS started\n");
                 }
                 catch
                 {
@@ -67,10 +64,7 @@ namespace Bynd9
                     context.Response.Headers.Add("Content-Type", "text/html");
                     using StreamWriter writer = new(context.Response.OutputStream);
                     writer.Write(context.Request.RemoteEndPoint.Address.ToString());
-                }
-                else
-                {
-
+                    continue;
                 }
                 ThreadPool.QueueUserWorkItem(ProcessRequest, context);
             }
@@ -84,6 +78,11 @@ namespace Bynd9
             while (true)
             { // Untested -------------------
                 HttpListenerContext context = httpListener.GetContext();
+                if (context.Request.Url!.AbsolutePath == "/ip")
+                {
+
+                    continue;
+                }
                 SslStream sslStream = new(context.Request.InputStream, false);
                 sslStream.AuthenticateAsServer(certificate, false, SslProtocols.Tls13, true);
                 ThreadPool.QueueUserWorkItem(ProcessRequest, context);
@@ -98,8 +97,8 @@ namespace Bynd9
             {
                 try
                 {
-                    string? hostNameAPIKey = context.Request.Headers.GetValues(C.conf.KeyFieldName).FirstOrDefault();
-                    if (hostNameAPIKey != null)
+                    string? hostNameAPIKey = context.Request.Headers.GetValues(C.conf.KeyFieldName)!.FirstOrDefault();
+                    if (!string.IsNullOrEmpty(hostNameAPIKey))
                     {
                         if (C.hosts.TryGetValue(hostNameAPIKey, out string? hostName))
                         {
@@ -108,39 +107,36 @@ namespace Bynd9
 
                             if (C.devices.Contains(postData.DeviceID))
                             {
+                                C.ResponseData R = new() { Status = 0 /* Update not needed */ };
+                                string RM = "Update not needed";
+
                                 if (postData.IP == "0.0.0.0")
                                     postData.IP = context.Request.RemoteEndPoint.Address.ToString();
 
                                 string CurrentValue = File.Exists($"{hostName}.ip") ? File.ReadAllText($"{hostName}.ip") : "0.0.0.0";
-                                C.ResponseData R = new();
-                                if (CurrentValue != postData.IP)
-                                {
-                                    // --- This is currently not thread safe ---
 
-                                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Updating zone file: {C.conf.ZoneFilePath}\n");
-                                    bool returnValue = Bind.UpdateARecord(C.conf.ZoneFilePath, hostName, postData.IP) && Bind.IncreaseSerial(C.conf.ZoneFilePath);
+                                if (CurrentValue != postData.IP) // --- This is currently not thread safe ---
+                                {  
+                                    R.Status = -1; // Update failed
+                                    RM = "Update failed";
 
-                                    if (returnValue)
+                                    File.AppendAllText($"server.log", $"{C.TS} => Updating zone file: {C.conf.ZoneFilePath}\n");
+
+                                    if (Bind.UpdateARecord(C.conf.ZoneFilePath, hostName, postData.IP) && Bind.IncreaseSerial(C.conf.ZoneFilePath))
                                     {
+                                        R.Status = 1; // Update succeeded
+                                        RM = postData.IP;
+                                        C.RestartBIND9 = true;
+
                                         File.WriteAllText($"{hostName}.ip", postData.IP);
 
-                                        C.RestartBIND9 = true;
-                                        R.Status = 1; // Update succeeded
-                                        File.AppendAllText($"{hostName}.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {postData.IP}\n");
                                         Bynd9Notifier.Discord.Server.Send(C.conf.Discord, $"{hostName}.{C.conf.FQDNSuffix}", CurrentValue, postData.IP);
                                         Bynd9Notifier.Telegram.Server.Send(C.conf.TelegramUser, $"{hostName}.{C.conf.FQDNSuffix}", CurrentValue, postData.IP);
                                     }
-                                    else
-                                    {
-                                        R.Status = -1; // Update failed
-                                        File.AppendAllText($"{hostName}.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Update failed\n");
-                                    }
                                 }
-                                else
-                                {
-                                    R.Status = 0; // Update not needed
-                                    File.AppendAllText($"{hostName}.history", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Update not needed\n");
-                                }
+
+                                File.AppendAllText($"{hostName}.history", $"{C.TS} => {RM}\n");
+
                                 context.Response.KeepAlive = true;
                                 context.Response.StatusCode = 200;
                                 context.Response.StatusDescription = "OK";
@@ -151,18 +147,17 @@ namespace Bynd9
                         }
                         else
                         {
-                            File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Invalid DeviceID\n");
+                            File.AppendAllText($"server.log", $"{C.TS} => Invalid DeviceID\n");
                         }
                     }
                     else
                     {
-                        File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Invalid API key\n");
+                        File.AppendAllText($"server.log", $"{C.TS} => Invalid API key\n");
                     }
                 }
                 catch ( Exception ex ) 
                 {
-                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => {ex.Message}\n");
-                    context.Response.Close();
+                    File.AppendAllText($"server.log", $"{C.TS} => {ex.Message}\n");
                 }
             }
             context.Response.Close();
