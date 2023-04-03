@@ -107,42 +107,42 @@ namespace Bynd9
 
                             if (C.devices.Contains(postData.DeviceID))
                             {
-                                C.ResponseData R = new() { Status = 0 /* Update not needed */ };
-                                string RM = "Update not needed";
+                                C.ResponseData responseCode = new() { Status = 0 /* Update not needed */ };
+                                string responseMessage = "Update not needed";
 
                                 if (postData.IP == "0.0.0.0")
                                     postData.IP = context.Request.RemoteEndPoint.Address.ToString();
 
-                                string CurrentValue = File.Exists($"{hostName}.ip") ? File.ReadAllText($"{hostName}.ip") : "0.0.0.0";
+                                string currentValue = File.Exists($"{hostName}.ip") ? File.ReadAllText($"{hostName}.ip") : "0.0.0.0";
 
-                                if (CurrentValue != postData.IP) // --- This is currently not thread safe ---
+                                if (currentValue != postData.IP) // --- This is currently not thread safe ---
                                 {  
-                                    R.Status = -1; // Update failed
-                                    RM = "Update failed";
+                                    responseCode.Status = -1; // Update failed
+                                    responseMessage = "Update failed";
 
                                     File.AppendAllText($"server.log", $"{C.TS} => Updating zone file: {C.conf.ZoneFilePath}\n");
 
                                     if (Bind.UpdateARecord(C.conf.ZoneFilePath, hostName, postData.IP) && Bind.IncreaseSerial(C.conf.ZoneFilePath))
                                     {
-                                        R.Status = 1; // Update succeeded
-                                        RM = postData.IP;
+                                        responseCode.Status = 1; // Update succeeded
+                                        responseMessage = postData.IP;
                                         C.RestartBIND9 = true;
 
                                         File.WriteAllText($"{hostName}.ip", postData.IP);
 
-                                        Bynd9Notifier.Discord.Server.Send(C.conf.Discord, $"{hostName}.{C.conf.FQDNSuffix}", CurrentValue, postData.IP);
-                                        Bynd9Notifier.Telegram.Server.Send(C.conf.TelegramUser, $"{hostName}.{C.conf.FQDNSuffix}", CurrentValue, postData.IP);
+                                        Bynd9Notifier.Discord.Server.Send(C.conf.Discord, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
+                                        Bynd9Notifier.Telegram.Server.Send(C.conf.TelegramUser, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
                                     }
                                 }
 
-                                File.AppendAllText($"{hostName}.history", $"{C.TS} => {RM}\n");
+                                File.AppendAllText($"{hostName}.history", $"{C.TS} => {responseMessage}\n");
 
                                 context.Response.KeepAlive = true;
                                 context.Response.StatusCode = 200;
                                 context.Response.StatusDescription = "OK";
                                 context.Response.Headers.Add("Content-Type", "text/html");
                                 using StreamWriter writer = new(context.Response.OutputStream);
-                                writer.Write(R.Status.ToString());
+                                writer.Write(responseCode.Status.ToString());
                             }
                         }
                         else

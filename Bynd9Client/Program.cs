@@ -2,10 +2,10 @@ using Bynd9Client;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 
-static bool GetNewIP(out string NewIP)
+static bool GetNewIP(out string newIP)
 {
     var url = $"http://{C.conf.Server}:{C.conf.Port}/ip";
-    NewIP = "0.0.0.0";
+    newIP = "0.0.0.0";
 
     HttpClient client = new();
     HttpContent content = new StringContent("");
@@ -18,10 +18,10 @@ static bool GetNewIP(out string NewIP)
         string lastIP = File.Exists("ip.last") ? File.ReadAllText("ip.last") : "0.0.0.0";
         if (currentIP != lastIP)
         {
-            NewIP = currentIP;
-            Bynd9Notifier.Discord.Client.Send(C.conf.Discord, C.conf.DeviceID, lastIP, NewIP, C.conf.Server);
-            Bynd9Notifier.Telegram.Client.Send(C.conf.TelegramUser, C.conf.DeviceID, lastIP, NewIP, C.conf.Server);
-            NewIP = currentIP;
+            newIP = currentIP;
+            Bynd9Notifier.Discord.Client.Send(C.conf.Discord, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
+            Bynd9Notifier.Telegram.Client.Send(C.conf.TelegramUser, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
+            newIP = currentIP;
             return true;
         }
     }
@@ -41,19 +41,19 @@ static string CodeToText(int Code) => Code switch
 };
 
 new System.Timers.Timer { AutoReset = true, Enabled = true, Interval = C.conf.Interval * 1000 }.Elapsed += (sender, args) => {
-    if (!GetNewIP(out string NewIP))
+    if (!GetNewIP(out string newIP))
         return;
     //if (GetNewIP(out string NewIP))
     //{
-    File.WriteAllText("ip.last",NewIP);
-    File.AppendAllText($"ip.history", $"{C.TS} => {NewIP}\n");
+    File.WriteAllText("ip.last",newIP);
+    File.AppendAllText($"ip.history", $"{C.TS} => {newIP}\n");
 
     var url = $"http://{C.conf.Server}:{C.conf.Port}{C.conf.Path}";
 
     using HttpClient client = new();
     client.DefaultRequestHeaders.Add(C.conf.KeyFieldName, C.conf.KeyFieldValue);
 
-    string requestBody = $"{{\"DeviceID\": \"{C.conf.DeviceID}\", \"IP\": \"{NewIP}\"}}";
+    string requestBody = $"{{\"DeviceID\": \"{C.conf.DeviceID}\", \"IP\": \"{newIP}\"}}";
 
     using var httpContent = new StringContent(requestBody, System.Text.Encoding.UTF8, "application/json");
     using HttpResponseMessage response = client.PostAsync(url, httpContent).Result;
