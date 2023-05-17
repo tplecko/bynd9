@@ -19,6 +19,8 @@ namespace Bynd9Client
             public string DeviceID { get; set; } = "Gateway";
             public string Discord { get; set; } = string.Empty;
             public string TelegramUser { get; set; } = string.Empty;
+            public string WhatsappNumber { get; set; } = string.Empty;
+            public string WhatsappKey { get; set; } = string.Empty;
             public int Interval { get; set; } = 30;
         }
     }

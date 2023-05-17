@@ -21,6 +21,7 @@ static bool GetNewIP(out string newIP)
             newIP = currentIP;
             Bynd9Notifier.Discord.Client.Send(C.conf.Discord, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
             Bynd9Notifier.Telegram.Client.Send(C.conf.TelegramUser, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
+            Bynd9Notifier.Whatsapp.Client.Send(C.conf.WhatsappNumber, C.conf.WhatsappKey, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
             newIP = currentIP;
             return true;
         }

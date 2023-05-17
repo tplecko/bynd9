@@ -7,5 +7,7 @@
   "DeviceID": "Gateway",
   "Discord": "",
   "TelegramUser": "",
+  "WhatsappNumber": "",
+  "WhatsappKey": "",
   "Interval": 30
 }

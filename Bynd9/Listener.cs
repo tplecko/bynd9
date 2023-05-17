@@ -132,6 +132,7 @@ namespace Bynd9
 
                                         Bynd9Notifier.Discord.Server.Send(C.conf.Discord, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
                                         Bynd9Notifier.Telegram.Server.Send(C.conf.TelegramUser, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
+                                        Bynd9Notifier.Whatsapp.Server.Send(C.conf.WhatsappNumber, C.conf.WhatsappKey, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
                                     }
                                 }
 
