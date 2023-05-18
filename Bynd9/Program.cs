@@ -1,7 +1,8 @@
 using Bynd9;
-using System.Net;
-using System.Text.Json;
 
+Bynd9Notifier.Discord.Server.Init(C.conf.Discord);
+Bynd9Notifier.Telegram.Server.Init(C.conf.TelegramUser);
+Bynd9Notifier.Whatsapp.Server.Init(C.conf.WhatsappNumber,C.conf.WhatsappKey);
 
 #region Setup ThreadPool
 ThreadPool.GetMaxThreads(out int workerThreadsMax, out int completionPortThreadsMax);

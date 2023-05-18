@@ -6,6 +6,26 @@ namespace Bynd9Notifier
     {
         public class Client
         {
+            public static void Init(string url)
+            {
+                if (url.Length > 0)
+                {
+                    using HttpClient client = new();
+
+                    string requestBody =
+                        $"{{\"embeds\": [" +
+                            $"{{\"title\": \"Bynd9CLient\", \"color\": \"9240320\", \"description\": \"Server reporting in :wave:\", \"url\": \"https://github.com/tplecko/bynd9\"}}," +
+
+                            $"{{\"fields\": [" +
+                                $"{{\"name\": \"Client startup\", \"value\": \"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}\"}}" +
+                            $"]}}" +
+                        $"]}}";
+
+                    using var httpContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                    using HttpResponseMessage response = client.PostAsync(url, httpContent).Result;
+
+                }
+            }
             public static void Send(string url, string device, string oldIP, string newIP, string server)
             {
                 if (url.Length > 0)
@@ -41,6 +61,26 @@ namespace Bynd9Notifier
         }
         public class Server
         {
+            public static void Init(string url)
+            {
+                if (url.Length > 0)
+                {
+                    using HttpClient client = new();
+
+                    string requestBody =
+                        $"{{\"embeds\": [" +
+                            $"{{\"title\": \"Bynd9\", \"color\": \"9240320\", \"description\": \"Server reporting in :wave:\", \"url\": \"https://github.com/tplecko/bynd9\"}}," +
+
+                            $"{{\"fields\": [" +
+                                $"{{\"name\": \"Server startup\", \"value\": \"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}\"}}" +
+                            $"]}}" +
+                        $"]}}";
+
+                    using var httpContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                    using HttpResponseMessage response = client.PostAsync(url, httpContent).Result;
+
+                }
+            }
             public static void Send(string url, string fqdn, string oldIP, string newIP)
             {
                 if (url.Length > 0)

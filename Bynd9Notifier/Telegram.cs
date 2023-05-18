@@ -10,6 +10,16 @@ namespace Bynd9Notifier
     {
         public class Client
         {
+            public static void Init(string user)
+            {
+                if (user.Length > 0)
+                {
+                    using HttpClient client = new();
+
+                    using var httpContent = new StringContent(string.Empty, Encoding.UTF8, "application/json");
+                    using HttpResponseMessage response = client.PostAsync($"https://api.callmebot.com/text.php?user={user}&text=Bynd9Client\nClient startup: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}", httpContent).Result;
+                }
+            }
             public static void Send(string user, string device, string oldIP, string newIP, string server)
             {
                 if (user.Length > 0)
@@ -33,6 +43,16 @@ namespace Bynd9Notifier
         }
         public class Server
         {
+            public static void Init(string user)
+            {
+                if (user.Length > 0)
+                {
+                    using HttpClient client = new();
+
+                    using var httpContent = new StringContent(string.Empty, Encoding.UTF8, "application/json");
+                    using HttpResponseMessage response = client.PostAsync($"https://api.callmebot.com/text.php?user={user}&text=Bynd9\nServer startup: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}", httpContent).Result;
+                }
+            }
             public static void Send(string user, string fqdn, string oldIP, string newIP)
             {
                 if (user.Length > 0)

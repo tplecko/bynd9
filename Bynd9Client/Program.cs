@@ -2,6 +2,16 @@ using Bynd9Client;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 
+try
+{
+    Bynd9Notifier.Discord.Client.Init(C.conf.Discord);
+    Bynd9Notifier.Telegram.Client.Init(C.conf.TelegramUser);
+    Bynd9Notifier.Whatsapp.Client.Init(C.conf.WhatsappNumber, C.conf.WhatsappKey);
+}
+catch (Exception e)
+{
+    File.AppendAllText("client.log", $"{C.TS} => {e.Message}\n");
+}
 static bool GetNewIP(out string newIP)
 {
     var url = $"http://{C.conf.Server}:{C.conf.Port}/ip";
@@ -19,15 +29,23 @@ static bool GetNewIP(out string newIP)
         if (currentIP != lastIP)
         {
             newIP = currentIP;
-            Bynd9Notifier.Discord.Client.Send(C.conf.Discord, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
-            Bynd9Notifier.Telegram.Client.Send(C.conf.TelegramUser, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
-            Bynd9Notifier.Whatsapp.Client.Send(C.conf.WhatsappNumber, C.conf.WhatsappKey, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
+            try
+            {
+                Bynd9Notifier.Discord.Client.Send(C.conf.Discord, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
+                Bynd9Notifier.Telegram.Client.Send(C.conf.TelegramUser, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
+                Bynd9Notifier.Whatsapp.Client.Send(C.conf.WhatsappNumber, C.conf.WhatsappKey, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
+            }
+            catch (Exception ex)
+            { 
+                File.AppendAllText("client.log", $"{C.TS} => {ex.Message}\n");
+            }
             newIP = currentIP;
             return true;
         }
     }
-    catch
+    catch (Exception e)
     {
+        File.AppendAllText("client.log", $"{C.TS} => {e.Message}\n");
         return false;
     }
     return false;
