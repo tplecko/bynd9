@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.ServiceProcess;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace Bynd9
 {
@@ -29,6 +30,7 @@ namespace Bynd9
                 else
                 {
                     File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Record update: Regex match failed\n");
+                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Record update: Was using pattern: {pattern}\n");
                 }
             }
             catch (Exception ex)
@@ -46,15 +48,16 @@ namespace Bynd9
             {
                 string zoneFileContents = File.ReadAllText(filePath);
 
-                string serialNumberPattern = @"\d{10}"; // Assumes a serial number in YYYYMMDDnn format
-                Match match = Regex.Match(zoneFileContents, serialNumberPattern);
+                string pattern = @"\d{10}"; // Assumes a serial number in YYYYMMDDnn format
+                Match match = Regex.Match(zoneFileContents, pattern);
 
                 if (match.Success)
                 {
                     int currentSerialNumber = int.Parse(match.Value);
 
-                    int newSerialNumber = currentSerialNumber + 1;
-                    string newZoneFileContents = Regex.Replace(zoneFileContents, serialNumberPattern, newSerialNumber.ToString().PadLeft(10, '0'));
+                    int newSerialNumber = int.Parse($"{DateTime.UtcNow:yyyyMMdd}{DayProgress()}");
+                    //int newSerialNumber = currentSerialNumber + 1;
+                    string newZoneFileContents = Regex.Replace(zoneFileContents, pattern, newSerialNumber.ToString().PadLeft(10, '0'));
 
                     File.WriteAllText(filePath, newZoneFileContents);
 
@@ -64,6 +67,7 @@ namespace Bynd9
                 else
                 {
                     File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Serial increase: Regex match failed\n");
+                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Serial increase: Was using pattern: {pattern}\n");
                 }
             }
             catch (Exception ex)
@@ -73,6 +77,8 @@ namespace Bynd9
             }
             return returnValue;
         }
+
+        internal static int DayProgress() => Convert.ToInt32((double)((DateTime.UtcNow.Hour * 60) + DateTime.UtcNow.Minute) / 1440 * 100);
 
         internal static void Restart()
         {

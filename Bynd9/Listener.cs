@@ -136,6 +136,14 @@ namespace Bynd9
                                     }
                                 }
 
+                                // Placeholder for error notifications
+                                //if (responseCode.Status == -1)
+                                //{
+                                //    Bynd9Notifier.Discord.Server.Send(C.conf.Discord, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
+                                //    Bynd9Notifier.Telegram.Server.Send(C.conf.TelegramUser, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
+                                //    Bynd9Notifier.Whatsapp.Server.Send(C.conf.WhatsappNumber, C.conf.WhatsappKey, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
+                                //}
+
                                 File.AppendAllText($"{hostName}.history", $"{C.TS} => {responseMessage}\n");
 
                                 context.Response.KeepAlive = true;
