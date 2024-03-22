@@ -51,11 +51,8 @@ namespace Bynd9
 
                 if (match.Success)
                 {
-                    int currentSerialNumber = int.Parse(match.Value);
-
-                    int newSerialNumber = int.Parse($"{DateTime.UtcNow:yyyyMMdd}{DayProgress()}");
-                    //int newSerialNumber = currentSerialNumber + 1;
-                    string newZoneFileContents = Regex.Replace(zoneFileContents, pattern, newSerialNumber.ToString().PadLeft(10, '0'));
+                    string newSerialNumber = $"{DateTime.UtcNow:yyyyMMdd}{DayProgress}".PadLeft(10, '0');
+                    string newZoneFileContents = Regex.Replace(zoneFileContents, pattern, newSerialNumber);
 
                     File.WriteAllText(filePath, newZoneFileContents);
 
@@ -76,7 +73,7 @@ namespace Bynd9
             return returnValue;
         }
 
-        internal static int DayProgress() => Convert.ToInt32((double)((DateTime.UtcNow.Hour * 60) + DateTime.UtcNow.Minute) / 1440 * 100);
+        internal static string DayProgress() => Convert.ToInt32((double)((DateTime.UtcNow.Hour * 60) + DateTime.UtcNow.Minute) / 1440 * 100).ToString().PadLeft(2, '0');
 
         internal static void Restart()
         {

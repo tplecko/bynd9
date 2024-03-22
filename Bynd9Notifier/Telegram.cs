@@ -69,6 +69,16 @@ namespace Bynd9Notifier
                     //}
                 }
             }
+            public static void SendError(string user, string err)
+            {
+                if (user.Length > 0)
+                {
+                    using HttpClient client = new();
+
+                    using var httpContent = new StringContent(string.Empty, Encoding.UTF8, "application/json");
+                    using HttpResponseMessage response = client.PostAsync($"https://api.callmebot.com/text.php?user={user}&text=Bynd9\nTimestamp: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}\nError: {err}", httpContent).Result;
+                }
+            }
         }
     }
 }

@@ -113,6 +113,28 @@ namespace Bynd9Notifier
                     //}
                 }
             }
+
+            public static void SendError(string url, string err)
+            {
+                if (url.Length > 0)
+                {
+                    using HttpClient client = new();
+
+                    string requestBody =
+                        $"{{\"embeds\": [" +
+                            $"{{\"title\": \"Bynd9\", \"color\": \"4092320\", \"description\": \"Server reporting error :bangbang:\", \"url\": \"https://github.com/tplecko/bynd9\"}}," +
+
+                            $"{{\"fields\": [" +
+                                $"{{\"name\": \"Timestamp\", \"value\": \"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}\"}}," +
+                                $"{{\"name\": \"Error\", \"value\": \"{err}\", \"inline\": false}}" +
+                            $"]}}" +
+                        $"]}}";
+
+                    using var httpContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                    using HttpResponseMessage response = client.PostAsync(url, httpContent).Result;
+                }
+            }
         }
+
     }
 }

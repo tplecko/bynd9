@@ -16,6 +16,9 @@ namespace Bynd9
         // Configuration
         internal readonly static Configuration conf = JsonSerializer.Deserialize<Configuration>(File.ReadAllText($@"config.json"))!;
 
+        // Listener class
+        internal readonly static Listener L = new();
+
         internal static string TS { get { return $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}"; } }
 
         public class PostData
