@@ -3,10 +3,49 @@ Allows Bind9 to be used as a dynamic DNS server as an alternative to popular pai
 
 Fully configurable http endpoint. Including key field name, path and port. You can change 'key' header field, listener port and path for each instance.
 
+# Config files
 Configuration is located in several .json files:
 - config.json - Holds the service configuration
 - devices.json - Holds the allowed device list. There is no limit on device name length.
 - hosts.json - Holds the API keys with associated hostnames. There is no limit on key length
+
+## config.json
+```
+{
+    "Interval": 60,
+    "HttpPort": 23432,
+    "certificateFilePath": "server.crt",
+    "certificatePassword": "password",
+    "HttpsPort": 23433,
+    "KeyFieldName": "API-key",
+    "Path": "/updater/post",
+    "ZoneFilePath": "C:\\temp\\test.zone",
+    "Bind9ServiceName": "bind9",
+    "FieldIndex": 2,
+    "ActiveString": "(running)",
+    "InactiveString": "(dead)",
+    "FQDNSuffix": "example.com",
+    "Discord": "",
+    "TelegramUser": "",
+    "WhatsappNumber": "",
+    "WhatsappKey": ""
+}
+```
+
+## devices.json
+```
+[
+    "device-name-1",
+    "device-name-2"    
+]
+```
+## hosts.json
+```
+{
+    "api-key-1": "domain-name-prefix-1",
+    "api-key-2": "domain-name-prefix-2"
+}
+```
 
 # To-do
 - https (started)
