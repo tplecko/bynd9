@@ -62,8 +62,7 @@ static string CodeToText(int Code) => Code switch
 new System.Timers.Timer { AutoReset = true, Enabled = true, Interval = C.conf.Interval * 1000 }.Elapsed += (sender, args) => {
     if (!GetNewIP(out string newIP))
         return;
-    //if (GetNewIP(out string NewIP))
-    //{
+
     File.WriteAllText("ip.last",newIP);
     File.AppendAllText($"ip.history", $"{C.TS} => {newIP}\n");
 
@@ -84,7 +83,6 @@ new System.Timers.Timer { AutoReset = true, Enabled = true, Interval = C.conf.In
         if (int.TryParse(responseBody, out int x))
             File.AppendAllText("client.log", $"{C.TS} => {CodeToText(x)}\n");
     }
-    //}
 };
 
 

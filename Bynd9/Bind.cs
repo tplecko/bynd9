@@ -1,6 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using System.ServiceProcess;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace Bynd9
 {
