@@ -14,6 +14,7 @@ if (!C.L.StartListener(out string err))
     Bynd9Notifier.Discord.Server.SendError(C.conf.Discord, err);
     Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, err);
     Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, err);
+    Environment.Exit(0);
 }
 
 new System.Timers.Timer { AutoReset = true, Enabled = true, Interval = C.conf.Interval * 1000 }.Elapsed += (sender, args) => {
