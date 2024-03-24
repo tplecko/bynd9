@@ -10,6 +10,9 @@ if (C.conf.DiscordIconURL.Equals("internal", StringComparison.CurrentCultureIgno
     C.conf.DiscordIconURL = $"http://{C.conf.ServerIP}:{C.conf.HttpPort}/discord/server_icon.jpg";
 }
 
+File.AppendAllText($"server.log", $"{C.TS} => DiscordAvatarURL: {C.conf.DiscordAvatarURL}\n");
+File.AppendAllText($"server.log", $"{C.TS} => DiscordIconURL: {C.conf.DiscordIconURL}\n");
+
 Bynd9Notifier.Discord.Server.Init(C.conf);
 Bynd9Notifier.Telegram.Server.Init(C.conf.TelegramUser);
 Bynd9Notifier.Whatsapp.Server.Init(C.conf.WhatsappNumber,C.conf.WhatsappKey);

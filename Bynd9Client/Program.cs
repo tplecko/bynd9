@@ -1,5 +1,4 @@
 using Bynd9Client;
-using System.Net;
 
 if (C.conf.DiscordAvatarURL.Equals("internal", StringComparison.CurrentCultureIgnoreCase))
 {
@@ -9,6 +8,9 @@ if (C.conf.DiscordIconURL.Equals("internal", StringComparison.CurrentCultureIgno
 {
     C.conf.DiscordIconURL = $"http://{C.conf.Server}:{C.conf.Port}/discord/client_icon.jpg";
 }
+
+File.AppendAllText("client.log", $"{C.TS} => DiscordAvatarURL: {C.conf.DiscordAvatarURL}\n");
+File.AppendAllText("client.log", $"{C.TS} => DiscordIconURL: {C.conf.DiscordIconURL}\n");
 
 Bynd9Notifier.Discord.Client.Init(C.conf);
 Bynd9Notifier.Telegram.Client.Init(C.conf.TelegramUser);
