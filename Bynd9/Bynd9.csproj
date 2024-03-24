@@ -14,5 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bynd9Notifier\Bynd9Notifier.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 </Project>

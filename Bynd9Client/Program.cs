@@ -4,7 +4,7 @@ using System.Security.Cryptography.X509Certificates;
 
 try
 {
-    Bynd9Notifier.Discord.Client.Init(C.conf.Discord);
+    Bynd9Notifier.Discord.Client.Init(C.conf);
     Bynd9Notifier.Telegram.Client.Init(C.conf.TelegramUser);
     Bynd9Notifier.Whatsapp.Client.Init(C.conf.WhatsappNumber, C.conf.WhatsappKey);
 }
@@ -31,7 +31,7 @@ static bool GetNewIP(out string newIP)
             newIP = currentIP;
             try
             {
-                Bynd9Notifier.Discord.Client.Send(C.conf.Discord, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
+                Bynd9Notifier.Discord.Client.Send(C.conf, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
                 Bynd9Notifier.Telegram.Client.Send(C.conf.TelegramUser, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
                 Bynd9Notifier.Whatsapp.Client.Send(C.conf.WhatsappNumber, C.conf.WhatsappKey, C.conf.DeviceID, lastIP, newIP, C.conf.Server);
             }

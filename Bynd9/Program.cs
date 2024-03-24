@@ -1,6 +1,6 @@
 using Bynd9;
 
-Bynd9Notifier.Discord.Server.Init(C.conf.Discord);
+Bynd9Notifier.Discord.Server.Init(C.conf);
 Bynd9Notifier.Telegram.Server.Init(C.conf.TelegramUser);
 Bynd9Notifier.Whatsapp.Server.Init(C.conf.WhatsappNumber,C.conf.WhatsappKey);
 
@@ -11,7 +11,7 @@ ThreadPool.SetMinThreads(workerThreadsMax, completionPortThreadsMax);
 
 if (!C.L.StartListener(out string err))
 {
-    Bynd9Notifier.Discord.Server.SendError(C.conf.Discord, err);
+    Bynd9Notifier.Discord.Server.SendError(C.conf, err);
     Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, err);
     Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, err);
     Environment.Exit(0);

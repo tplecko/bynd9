@@ -37,7 +37,7 @@ namespace Bynd9
             if (!C.L.StopListener(out string err))
             {
                 _logger.LogInformation("{time} => Error stopping worker...", DateTimeOffset.Now);
-                Bynd9Notifier.Discord.Server.SendError(C.conf.Discord, err);
+                Bynd9Notifier.Discord.Server.SendError(C.conf, err);
                 Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, err);
                 Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, err);
             }
@@ -216,7 +216,7 @@ namespace Bynd9
 
                                         File.WriteAllText($"{hostName}.ip", postData.IP);
 
-                                        Bynd9Notifier.Discord.Server.Send(C.conf.Discord, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
+                                        Bynd9Notifier.Discord.Server.Send(C.conf, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
                                         Bynd9Notifier.Telegram.Server.Send(C.conf.TelegramUser, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
                                         Bynd9Notifier.Whatsapp.Server.Send(C.conf.WhatsappNumber, C.conf.WhatsappKey, $"{hostName}.{C.conf.FQDNSuffix}", currentValue, postData.IP);
                                     }
@@ -237,7 +237,7 @@ namespace Bynd9
                         {
                             string msg = "Invalid DeviceID";
                             _logger.LogError("{time} => " + msg, DateTimeOffset.Now);
-                            Bynd9Notifier.Discord.Server.SendError(C.conf.Discord, msg);
+                            Bynd9Notifier.Discord.Server.SendError(C.conf, msg);
                             Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, msg);
                             Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, msg);
                             File.AppendAllText($"server.log", $"{C.TS} => {msg}\n");
@@ -247,7 +247,7 @@ namespace Bynd9
                     {
                         string msg = "Invalid API key";
                         _logger.LogError("{time} => Invalid API key", DateTimeOffset.Now);
-                        Bynd9Notifier.Discord.Server.SendError(C.conf.Discord, msg);
+                        Bynd9Notifier.Discord.Server.SendError(C.conf, msg);
                         Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, msg);
                         Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, msg);
                         File.AppendAllText($"server.log", $"{C.TS} => {msg}\n");
@@ -256,7 +256,7 @@ namespace Bynd9
                 catch (Exception ex)
                 {
                     _logger.LogError("{time} => Exception " + ex.Message, DateTimeOffset.Now);
-                    Bynd9Notifier.Discord.Server.SendError(C.conf.Discord, ex.Message);
+                    Bynd9Notifier.Discord.Server.SendError(C.conf, ex.Message);
                     Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, ex.Message);
                     Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, ex.Message);
                     File.AppendAllText($"server.log", $"{C.TS} => {ex.Message}\n");
@@ -266,7 +266,7 @@ namespace Bynd9
             {
                 string msg = "Invalid AbsolutePath." + context.Request.Url!.AbsolutePath;
                 _logger.LogError("{time} => " + msg, DateTimeOffset.Now);
-                Bynd9Notifier.Discord.Server.SendError(C.conf.Discord, msg);
+                Bynd9Notifier.Discord.Server.SendError(C.conf, msg);
                 Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, msg);
                 Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, msg);
                 File.AppendAllText($"server.log", $"{C.TS} => {msg}\n");
