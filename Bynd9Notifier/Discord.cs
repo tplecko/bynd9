@@ -14,7 +14,7 @@ namespace Bynd9Notifier
 
                     string requestBody =
                         $"{{\"embeds\": [" +
-                            $"{{\"title\": \"Bynd9CLient\", \"color\": \"9240320\", \"description\": \"Server reporting in :wave:\", \"url\": \"https://github.com/tplecko/bynd9\"}}," +
+                            $"{{\"title\": \"Bynd9Client\", \"color\": \"9240320\", \"description\": \"Server reporting in :wave:\", \"url\": \"https://github.com/tplecko/bynd9\"}}," +
 
                             $"{{\"fields\": [" +
                                 $"{{\"name\": \"Client startup\", \"value\": \"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}\"}}" +
