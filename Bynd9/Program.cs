@@ -27,6 +27,7 @@ if (!C.L.StartListener(out string err))
     Bynd9Notifier.Discord.Server.SendError(C.conf, err);
     Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, err);
     Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, err);
+    File.AppendAllText($"server.log", $"{C.TS} => {err}\n");
     Environment.Exit(0);
 }
 

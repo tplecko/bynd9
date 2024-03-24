@@ -45,6 +45,7 @@ namespace Bynd9
                 }
                 catch (Exception ex)
                 {
+                    File.AppendAllText($"server.log", $"{C.TS} => HTTP not started\n");
                     Err = ex.Message;
                 }
             }
@@ -58,6 +59,7 @@ namespace Bynd9
                 }
                 catch (Exception ex)
                 {
+                    File.AppendAllText($"server.log", $"{C.TS} => HTTPS not started\n");
                     Err = ex.Message;
                 }
             }
