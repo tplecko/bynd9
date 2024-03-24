@@ -6,6 +6,7 @@
         {
             public int Interval { get; set; } = 60;
             public int HttpPort { get; set; } = 23432;
+            public string ServerIP { get; set; } = string.Empty;
             public int HttpsPort { get; set; } = 23433;
             public string Path { get; set; } = "/updater/post";
             public string KeyFieldName { get; set; } = "API-key";
@@ -17,7 +18,7 @@
             public string CertificateFilePath { get; set; } = "server.crt";
             public string CertificatePassword { get; set; } = "password";
             public string Discord { get; set; } = string.Empty;
-            public string DiscordAvatarURL { get; set; } = string.Empty;
+            public string DiscordAvatarURL { get; set; } = "/discord/avatar.jpg";
             public string DiscordIconURL { get; set; } = string.Empty;
             public string TelegramUser { get; set; } = string.Empty;
             public string WhatsappNumber { get; set; } = string.Empty;

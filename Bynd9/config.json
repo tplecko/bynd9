@@ -1,6 +1,7 @@
 ﻿{
   "Interval": 60,
   "HttpPort": 23432,
+  "ServerIP": "",
   "certificateFilePath": "server.crt",
   "certificatePassword": "password",
   "HttpsPort": 23433,
@@ -13,8 +14,8 @@
   "InactiveString": "(dead)",
   "FQDNSuffix": "example.com",
   "Discord": "",
-  "DiscordIconURL": "",
-  "DiscordAvatarURL": "",
+  "DiscordIconURL": "internal",
+  "DiscordAvatarURL": "internal",
   "TelegramUser": "",
   "WhatsappNumber": "",
   "WhatsappKey": ""

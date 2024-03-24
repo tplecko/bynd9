@@ -1,4 +1,14 @@
 using Bynd9;
+using System.Net;
+
+if (C.conf.DiscordAvatarURL.Equals("internal", StringComparison.CurrentCultureIgnoreCase) && IPAddress.TryParse(C.conf.ServerIP, out _))
+{
+    C.conf.DiscordAvatarURL = $"http://{C.conf.ServerIP}:{C.conf.HttpPort}/discord/avatar.jpg";
+}
+if (C.conf.DiscordIconURL.Equals("internal", StringComparison.CurrentCultureIgnoreCase) && IPAddress.TryParse(C.conf.ServerIP, out _))
+{
+    C.conf.DiscordIconURL = $"http://{C.conf.ServerIP}:{C.conf.HttpPort}/discord/server_icon.jpg";
+}
 
 Bynd9Notifier.Discord.Server.Init(C.conf);
 Bynd9Notifier.Telegram.Server.Init(C.conf.TelegramUser);

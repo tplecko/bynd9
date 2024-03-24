@@ -9,11 +9,12 @@ Configuration is located in several .json files:
 - devices.json - Holds the allowed device list. There is no limit on device name length.
 - hosts.json - Holds the API keys with associated hostnames. There is no limit on key length
 
-## config.json
+## config.json - Server
 ```
 {
     "Interval": 60,
     "HttpPort": 23432,
+    "ServerIP": "",
     "certificateFilePath": "server.crt",
     "certificatePassword": "password",
     "HttpsPort": 23433,
@@ -26,11 +27,14 @@ Configuration is located in several .json files:
     "InactiveString": "(dead)",
     "FQDNSuffix": "example.com",
     "Discord": "",
+    "DiscordIconURL": "internal",
+    "DiscordAvatarURL": "internal",
     "TelegramUser": "",
     "WhatsappNumber": "",
     "WhatsappKey": ""
 }
 ```
+ServerIP and HttpPort are used when DiscordIconURL or DiscordAvatarURL are set to "internal"
 
 ## devices.json
 ```
@@ -39,6 +43,7 @@ Configuration is located in several .json files:
     "device-name-2"    
 ]
 ```
+
 ## hosts.json
 ```
 {
@@ -46,6 +51,26 @@ Configuration is located in several .json files:
     "api-key-2": "domain-name-prefix-2"
 }
 ```
+
+## config.json - Client
+```
+{
+  "Server": "127.0.0.1",
+  "Port": 23432,
+  "Path": "/updater/post",
+  "KeyFieldName": "API-key",
+  "KeyFieldValue": "asdfasdfASDFASDF",
+  "DeviceID": "Gateway",
+  "Discord": "",
+  "DiscordIconURL": "internal",
+  "DiscordAvatarURL": "internal",
+  "TelegramUser": "",
+  "WhatsappNumber": "",
+  "WhatsappKey": "",
+  "Interval": 30
+}
+```
+Server and Port are used when DiscordIconURL or DiscordAvatarURL are set to "internal"
 
 # To-do
 - https (started)

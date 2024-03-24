@@ -1,17 +1,19 @@
 using Bynd9Client;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 
-try
+if (C.conf.DiscordAvatarURL.Equals("internal", StringComparison.CurrentCultureIgnoreCase))
 {
-    Bynd9Notifier.Discord.Client.Init(C.conf);
-    Bynd9Notifier.Telegram.Client.Init(C.conf.TelegramUser);
-    Bynd9Notifier.Whatsapp.Client.Init(C.conf.WhatsappNumber, C.conf.WhatsappKey);
+    C.conf.DiscordAvatarURL = $"http://{C.conf.Server}:{C.conf.Port}/discord/avatar.jpg";
 }
-catch (Exception e)
+if (C.conf.DiscordIconURL.Equals("internal", StringComparison.CurrentCultureIgnoreCase))
 {
-    File.AppendAllText("client.log", $"{C.TS} => {e.Message}\n");
+    C.conf.DiscordIconURL = $"http://{C.conf.Server}:{C.conf.Port}/discord/client_icon.jpg";
 }
+
+Bynd9Notifier.Discord.Client.Init(C.conf);
+Bynd9Notifier.Telegram.Client.Init(C.conf.TelegramUser);
+Bynd9Notifier.Whatsapp.Client.Init(C.conf.WhatsappNumber, C.conf.WhatsappKey);
+
 static bool GetNewIP(out string newIP)
 {
     var url = $"http://{C.conf.Server}:{C.conf.Port}/ip";
