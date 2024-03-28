@@ -20,6 +20,7 @@ namespace Bynd9
         internal readonly static Listener L = new();
 
         internal static string TS { get { return $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}"; } }
+        internal static string DayProgress { get { return Convert.ToInt32((double)((DateTime.UtcNow.Hour * 60) + DateTime.UtcNow.Minute) / 1440 * 100).ToString().PadLeft(2, '0'); } }
 
         public class PostData
         {
