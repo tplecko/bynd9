@@ -304,7 +304,7 @@ namespace Bynd9
             }
             else
             {
-                string msg = "Invalid AbsolutePath." + context.Request.Url!.AbsolutePath;
+                string msg = "Invalid AbsolutePath " + context.Request.Url!.AbsolutePath;
                 _logger.LogError("{time} => " + msg, DateTimeOffset.Now);
                 Bynd9Notifier.Discord.Server.SendError(C.conf, msg);
                 Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, msg);

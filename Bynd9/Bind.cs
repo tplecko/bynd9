@@ -23,17 +23,17 @@ namespace Bynd9
                     File.WriteAllText(filePath, zoneFileContents);
 
                     returnValue = true;
-                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Record update: Regex match success\n");
+                    File.AppendAllText($"server.log", $"{C.TS} => Record update: Regex match success\n");
                 }
                 else
                 {
-                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Record update: Regex match failed\n");
-                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Record update: Was using pattern: {pattern}\n");
+                    File.AppendAllText($"server.log", $"{C.TS} => Record update: Regex match failed\n");
+                    File.AppendAllText($"server.log", $"{C.TS} => Record update: Was using pattern: {pattern}\n");
                 }
             }
             catch (Exception ex)
             {
-                File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Record update failed: {ex}\n");
+                File.AppendAllText($"server.log", $"{C.TS} => Record update failed: {ex}\n");
                 return returnValue;
             }
             return returnValue;
@@ -54,20 +54,23 @@ namespace Bynd9
                     string newSerialNumber = $"{DateTime.UtcNow:yyyyMMdd}{DayProgress}".PadLeft(10, '0');
                     string newZoneFileContents = Regex.Replace(zoneFileContents, pattern, newSerialNumber);
 
+                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: Day progress: {DayProgress}\n");
+                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: New serial: {newSerialNumber}\n");
+
                     File.WriteAllText(filePath, newZoneFileContents);
 
                     returnValue = true;
-                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Serial increase: Regex match success\n");
+                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: Regex match success\n");
                 }
                 else
                 {
-                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Serial increase: Regex match failed\n");
-                    File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Serial increase: Was using pattern: {pattern}\n");
+                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: Regex match failed\n");
+                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: Was using pattern: {pattern}\n");
                 }
             }
             catch (Exception ex)
             {
-                File.AppendAllText($"server.log", $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} => Serial increase failed: {ex}\n");
+                File.AppendAllText($"server.log", $"{C.TS} => Serial increase failed: {ex}\n");
                 return returnValue;
             }
             return returnValue;
