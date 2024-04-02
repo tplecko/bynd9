@@ -27,8 +27,7 @@ namespace Bynd9
                 }
                 else
                 {
-                    File.AppendAllText($"server.log", $"{C.TS} => Record update: Regex match failed\n");
-                    File.AppendAllText($"server.log", $"{C.TS} => Record update: Was using pattern: {pattern}\n");
+                    File.AppendAllText($"server.log", $"{C.TS} => Record update: Regex match failed. Was using pattern: {pattern}\n");
                 }
             }
             catch (Exception ex)
@@ -54,8 +53,7 @@ namespace Bynd9
                     string newSerialNumber = $"{DateTime.UtcNow:yyyyMMdd}{C.DayProgress}".PadLeft(10, '0');
                     string newZoneFileContents = Regex.Replace(zoneFileContents, pattern, newSerialNumber);
 
-                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: Day progress: {C.DayProgress}\n");
-                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: New serial: {newSerialNumber}\n");
+                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: Day progress: {C.DayProgress}. New serial: {newSerialNumber}\n");
 
                     File.WriteAllText(filePath, newZoneFileContents);
 
@@ -64,8 +62,7 @@ namespace Bynd9
                 }
                 else
                 {
-                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: Regex match failed\n");
-                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: Was using pattern: {pattern}\n");
+                    File.AppendAllText($"server.log", $"{C.TS} => Serial increase: Regex match failed. Was using pattern: {pattern}\n");
                 }
             }
             catch (Exception ex)
