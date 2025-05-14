@@ -108,7 +108,7 @@ namespace Bynd9
             {
                 if (context.Request.Url!.AbsolutePath == "/")
                 {
-                    _logger.LogWarning("{time} => Access denied to root path from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
+                    _logger.LogWarning("{time} http => Access denied to root path from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
                     context.Response.StatusCode = 403;
                     context.Response.StatusDescription = "Forbidden";
                     context.Response.Headers.Add("Content-Type", "text/html");
@@ -118,7 +118,7 @@ namespace Bynd9
                 }
                 else if (context.Request.Url!.AbsolutePath == "/ip")
                 {
-                    _logger.LogInformation("{time} => Reporting Http IP", DateTimeOffset.Now);
+                    _logger.LogInformation("{time} http => Reporting IP", DateTimeOffset.Now);
                     context.Response.KeepAlive = true;
                     context.Response.StatusCode = 200;
                     context.Response.StatusDescription = "OK";
@@ -129,7 +129,7 @@ namespace Bynd9
                 }
                 else if (context.Request.Url!.AbsolutePath == "/robots.txt")
                 {
-                    _logger.LogInformation("{time} => Serving robots.txt", DateTimeOffset.Now);
+                    _logger.LogInformation("{time} http => Serving robots.txt", DateTimeOffset.Now);
                     context.Response.KeepAlive = true;
                     context.Response.StatusCode = 200;
                     context.Response.StatusDescription = "OK";
@@ -140,7 +140,7 @@ namespace Bynd9
                 }
                 else if (context.Request.Url!.AbsolutePath == "/config.json")
                 {
-                    _logger.LogWarning("{time} => Crawler or client requested /config.json from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
+                    _logger.LogWarning("{time} http => Crawler or client requested /config.json from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
                     context.Response.KeepAlive = true;
                     context.Response.StatusCode = 404;
                     context.Response.StatusDescription = "Not Found";
@@ -191,7 +191,7 @@ namespace Bynd9
                 }
                 else
                 {
-                    await ProcessRequest(context, cancellationToken);
+                    await ProcessRequest(context, false, cancellationToken);
                 }
             }
             catch (OperationCanceledException)
@@ -214,9 +214,19 @@ namespace Bynd9
             {
                 X509Certificate2 __certificate = new(C.conf.CertificateFilePath, C.conf.CertificatePassword);
 
-                if (context.Request.Url!.AbsolutePath == "/ip")
+                if (context.Request.Url!.AbsolutePath == "/")
                 {
-                    _logger.LogInformation("{time} => Reporting Https IP", DateTimeOffset.Now);
+                    _logger.LogWarning("{time} https => Access denied to root path from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
+                    context.Response.StatusCode = 403;
+                    context.Response.StatusDescription = "Forbidden";
+                    context.Response.Headers.Add("Content-Type", "text/html");
+                    using StreamWriter writer = new(context.Response.OutputStream);
+                    var html = new StringBuilder("<html><body><h1>403 Forbidden</h1><p>Access to this resource is denied.</p></body></html>");
+                    await writer.WriteAsync(html, cancellationToken);
+                }
+                else if (context.Request.Url!.AbsolutePath == "/ip")
+                {
+                    _logger.LogInformation("{time} https => Reporting IP", DateTimeOffset.Now);
                     context.Response.KeepAlive = true;
                     context.Response.StatusCode = 200;
                     context.Response.StatusDescription = "OK";
@@ -225,11 +235,33 @@ namespace Bynd9
                     var sb = new StringBuilder(context.Request.RemoteEndPoint.Address.ToString());
                     await writer.WriteAsync(sb, cancellationToken);
                 }
+                else if (context.Request.Url!.AbsolutePath == "/robots.txt")
+                {
+                    _logger.LogInformation("{time} https => Serving robots.txt", DateTimeOffset.Now);
+                    context.Response.KeepAlive = true;
+                    context.Response.StatusCode = 200;
+                    context.Response.StatusDescription = "OK";
+                    context.Response.Headers.Add("Content-Type", "text/plain");
+                    using StreamWriter writer = new(context.Response.OutputStream);
+                    var robotsContent = new StringBuilder("User-agent: *\nDisallow: /");
+                    await writer.WriteAsync(robotsContent, cancellationToken);
+                }
+                else if (context.Request.Url!.AbsolutePath == "/config.json")
+                {
+                    _logger.LogWarning("{time} https => Crawler or client requested /config.json from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
+                    context.Response.KeepAlive = true;
+                    context.Response.StatusCode = 404;
+                    context.Response.StatusDescription = "Not Found";
+                    context.Response.Headers.Add("Content-Type", "application/json");
+                    using StreamWriter writer = new(context.Response.OutputStream);
+                    var response = new StringBuilder("{\"error\":\"Not found\"}");
+                    await writer.WriteAsync(response, cancellationToken);
+                }
                 else
                 {
                     SslStream sslStream = new(context.Request.InputStream, false);
                     sslStream.AuthenticateAsServer(__certificate, false, SslProtocols.Tls13, true);
-                    await ProcessRequest(context, cancellationToken);
+                    await ProcessRequest(context, true, cancellationToken);
                 }
             }
             catch (OperationCanceledException)
@@ -248,8 +280,10 @@ namespace Bynd9
 
 
 
-        async Task ProcessRequest(HttpListenerContext context, CancellationToken cancellationToken)
+        private async Task ProcessRequest(HttpListenerContext context, bool https, CancellationToken cancellationToken)
         {
+            string ssl = https? "https" : "http";
+
             if (context.Request.Url!.AbsolutePath == C.conf.Path)
             {
                 _logger.LogInformation("{time} => Processing context", DateTimeOffset.Now);
@@ -307,8 +341,8 @@ namespace Bynd9
                         }
                         else
                         {
-                            string msg = "Invalid DeviceID";
-                            _logger.LogError("{time} => " + msg, DateTimeOffset.Now);
+                            string msg = $"{ssl}Invalid DeviceID";
+                            _logger.LogError("{time} => {msg}", DateTimeOffset.Now, msg);
                             Bynd9Notifier.Discord.Server.SendError(C.conf, msg);
                             Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, msg);
                             Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, msg);
@@ -317,7 +351,7 @@ namespace Bynd9
                     }
                     else
                     {
-                        string msg = "Invalid API key";
+                        string msg = $"{ssl}Invalid API key";
                         _logger.LogError("{time} => Invalid API key", DateTimeOffset.Now);
                         Bynd9Notifier.Discord.Server.SendError(C.conf, msg);
                         Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, msg);
@@ -327,7 +361,7 @@ namespace Bynd9
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("{time} => Exception " + ex.Message, DateTimeOffset.Now);
+                    _logger.LogError("{time} => Exception {message}", DateTimeOffset.Now, ex.Message);
                     Bynd9Notifier.Discord.Server.SendError(C.conf, ex.Message);
                     Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, ex.Message);
                     Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, ex.Message);
@@ -336,8 +370,8 @@ namespace Bynd9
             }
             else
             {
-                string msg = "Invalid AbsolutePath " + context.Request.Url!.AbsolutePath;
-                _logger.LogError("{time} => " + msg, DateTimeOffset.Now);
+                string msg = $"{ssl}Invalid AbsolutePath " + context.Request.Url!.AbsolutePath;
+                _logger.LogError("{time} => {msg}", DateTimeOffset.Now, msg);
                 Bynd9Notifier.Discord.Server.SendError(C.conf, msg);
                 Bynd9Notifier.Telegram.Server.SendError(C.conf.TelegramUser, msg);
                 Bynd9Notifier.Whatsapp.Server.SendError(C.conf.WhatsappNumber, C.conf.WhatsappKey, msg);
