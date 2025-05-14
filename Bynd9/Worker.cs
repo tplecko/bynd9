@@ -138,6 +138,17 @@ namespace Bynd9
                     var robotsContent = new StringBuilder("User-agent: *\nDisallow: /");
                     await writer.WriteAsync(robotsContent, cancellationToken);
                 }
+                else if (context.Request.Url!.AbsolutePath == "/sitemap.xml")
+                {
+                    _logger.LogWarning("{time} http => Crawler or client requested /sitemap.xml from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
+                    context.Response.KeepAlive = true;
+                    context.Response.StatusCode = 404;
+                    context.Response.StatusDescription = "Not Found";
+                    context.Response.Headers.Add("Content-Type", "application/json");
+                    using StreamWriter writer = new(context.Response.OutputStream);
+                    var response = new StringBuilder("{\"error\":\"Not found\"}");
+                    await writer.WriteAsync(response, cancellationToken);
+                }
                 else if (context.Request.Url!.AbsolutePath == "/config.json")
                 {
                     _logger.LogWarning("{time} http => Crawler or client requested /config.json from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
@@ -245,6 +256,17 @@ namespace Bynd9
                     using StreamWriter writer = new(context.Response.OutputStream);
                     var robotsContent = new StringBuilder("User-agent: *\nDisallow: /");
                     await writer.WriteAsync(robotsContent, cancellationToken);
+                }
+                else if (context.Request.Url!.AbsolutePath == "/sitemap.xml")
+                {
+                    _logger.LogWarning("{time} http => Crawler or client requested /sitemap.xml from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
+                    context.Response.KeepAlive = true;
+                    context.Response.StatusCode = 404;
+                    context.Response.StatusDescription = "Not Found";
+                    context.Response.Headers.Add("Content-Type", "application/json");
+                    using StreamWriter writer = new(context.Response.OutputStream);
+                    var response = new StringBuilder("{\"error\":\"Not found\"}");
+                    await writer.WriteAsync(response, cancellationToken);
                 }
                 else if (context.Request.Url!.AbsolutePath == "/config.json")
                 {
