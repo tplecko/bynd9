@@ -106,7 +106,17 @@ namespace Bynd9
         {
             try
             {
-                if (context.Request.Url!.AbsolutePath == "/ip")
+                if (context.Request.Url!.AbsolutePath == "/")
+                {
+                    _logger.LogWarning("{time} => Access denied to root path from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
+                    context.Response.StatusCode = 403;
+                    context.Response.StatusDescription = "Forbidden";
+                    context.Response.Headers.Add("Content-Type", "text/html");
+                    using StreamWriter writer = new(context.Response.OutputStream);
+                    var html = new StringBuilder("<html><body><h1>403 Forbidden</h1><p>Access to this resource is denied.</p></body></html>");
+                    await writer.WriteAsync(html, cancellationToken);
+                }
+                else if (context.Request.Url!.AbsolutePath == "/ip")
                 {
                     _logger.LogInformation("{time} => Reporting Http IP", DateTimeOffset.Now);
                     context.Response.KeepAlive = true;
@@ -116,6 +126,28 @@ namespace Bynd9
                     using StreamWriter writer = new(context.Response.OutputStream);
                     var sb = new StringBuilder(context.Request.RemoteEndPoint.Address.ToString());
                     await writer.WriteAsync(sb, cancellationToken);
+                }
+                else if (context.Request.Url!.AbsolutePath == "/robots.txt")
+                {
+                    _logger.LogInformation("{time} => Serving robots.txt", DateTimeOffset.Now);
+                    context.Response.KeepAlive = true;
+                    context.Response.StatusCode = 200;
+                    context.Response.StatusDescription = "OK";
+                    context.Response.Headers.Add("Content-Type", "text/plain");
+                    using StreamWriter writer = new(context.Response.OutputStream);
+                    var robotsContent = new StringBuilder("User-agent: *\nDisallow: /");
+                    await writer.WriteAsync(robotsContent, cancellationToken);
+                }
+                else if (context.Request.Url!.AbsolutePath == "/config.json")
+                {
+                    _logger.LogWarning("{time} => Crawler or client requested /config.json from {remote}", DateTimeOffset.Now, context.Request.RemoteEndPoint);
+                    context.Response.KeepAlive = true;
+                    context.Response.StatusCode = 404;
+                    context.Response.StatusDescription = "Not Found";
+                    context.Response.Headers.Add("Content-Type", "application/json");
+                    using StreamWriter writer = new(context.Response.OutputStream);
+                    var response = new StringBuilder("{\"error\":\"Not found\"}");
+                    await writer.WriteAsync(response, cancellationToken);
                 }
                 else if (context.Request.Url!.AbsolutePath == "/favicon.ico")
                 {
